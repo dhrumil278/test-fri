@@ -1,0 +1,35 @@
+{
+  "env": {
+    "node": true,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:node/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-var": "error", // Disallow the use of var
+    "prefer-const": [
+      "error",
+      {
+        "destructuring": "all",
+        "ignoreReadBeforeAssign": true
+      }
+    ], // Prefer const over let if the variable is not reassigned
+    "quotes": ["error", "double"], // Enforce double quotes
+    "no-console": ["warn"], // Warn on console usage
+    "padding-line-between-statements": [
+      "error",
+      {
+        "blankLine": "always",
+        "prev": "*",
+        "next": "return"
+      }
+    ] // Add one blank line before return
+  }
+}

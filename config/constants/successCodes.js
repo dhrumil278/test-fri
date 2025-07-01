@@ -1,0 +1,7 @@
+const SUCCESS_CODES = {
+  EMPTY_STRING: "",
+  SUCCESS: "SUCCESS",
+  HEALTH_CHECK: "HEALTH_CHECK",
+};
+
+module.exports = { SUCCESS_CODES };
