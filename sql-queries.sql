@@ -1,10 +1,14 @@
 CREATE TABLE admin (
-    id TEXT NOT NULL, -- required
+    id TEXT NOT NULL,
     "firstName" TEXT DEFAULT NULL,
     "lastName" TEXT DEFAULT NULL,
-    email TEXT NOT NULL, -- required
-    password TEXT NOT NULL, -- required
+    email TEXT NOT NULL,
+    password TEXT NOT NULL,
     "authToken" TEXT DEFAULT NULL,
+    "twoFASecret" TEXT DEFAULT NULL,
+    "isTwoFAEnabled" BOOLEAN DEFAULT FALSE,
+    "sessionTwoFA" BOOLEAN DEFAULT FALSE,
+    "role" TEXT DEFAULT 'SUPER_ADMIN',
     "isActive" BOOLEAN DEFAULT TRUE,
     "createdAt" BIGINT NOT NULL,
     "updatedAt" BIGINT NOT NULL,
