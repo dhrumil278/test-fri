@@ -1,0 +1,47 @@
+const ATTRIBUTES = ["deletedBy", "deletedAt", "createdBy", "updatedBy"];
+
+const FIELDS = {
+  ASC: "ASC",
+  DESC: "DESC",
+  CREATED_AT: "createdAt",
+  REMOVED_ATTRIBUTES: [...ATTRIBUTES],
+  REMOVED_SENSITIVE_ATTRIBUTES: [
+    ...ATTRIBUTES,
+    "authToken",
+    "password",
+    "twoFASecret",
+    "forgotPwdToken",
+    "forgotPwdTokenExpiry",
+  ],
+  ID_ARRAY: ["id"],
+  EMPTY_STRING: "",
+  EMPTY_STRING_ARRAY: [""],
+  JOI_EMPTY_ARRAY: ["", null],
+  IS_ACTIVE: "isActive",
+  LOWER_CASE_CHARS: "abcdefghijklmnopqrstuvwxyz",
+  UPPER_CASE_CHARS: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  DIGITS: "0123456789",
+  SPECIAL_CHARS: "@#$*!&",
+  UTF8: "utf-8",
+  SEQUENCE_NUMBER: "sequenceNumber",
+  NAME: "name",
+  ADMIN: "ADMIN",
+  EMAIL: "email",
+  FIRST_NAME: "firstName",
+  LAST_NAME: "lastName",
+  ID_NAME_EMAIL_ARRAY: ["id", "name", "email"],
+  ID_NAME_ROLE_ARRAY: ["id", "name", "role"],
+  BASE32: "base32",
+  EMAIL: "EMAIL",
+  LAST_LOGIN: "lastLogin",
+  ID_NAME_ARRAY: ["id", "name"],
+  UPDATED_AT: "updatedAt",
+  UPDATED_BY: "updatedBy",
+  LOGO: "logo",
+  PROFILE: "profile",
+  ID: "id",
+};
+
+module.exports = {
+  FIELDS,
+};

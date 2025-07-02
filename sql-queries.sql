@@ -1,0 +1,21 @@
+CREATE TABLE admin (
+    id TEXT NOT NULL,
+    "firstName" TEXT DEFAULT NULL,
+    "lastName" TEXT DEFAULT NULL,
+    email TEXT NOT NULL,
+    password TEXT NOT NULL,
+    "authToken" TEXT DEFAULT NULL,
+    "twoFASecret" TEXT DEFAULT NULL,
+    "isTwoFAEnabled" BOOLEAN DEFAULT FALSE,
+    "sessionTwoFA" BOOLEAN DEFAULT FALSE,
+    "role" TEXT DEFAULT 'SUPER_ADMIN',
+    "isActive" BOOLEAN DEFAULT TRUE,
+    "createdAt" BIGINT NOT NULL,
+    "updatedAt" BIGINT NOT NULL,
+    "createdBy" TEXT NOT NULL,
+    "updatedBy" TEXT NOT NULL,
+    "isDeleted" BOOLEAN DEFAULT FALSE,
+    "deletedBy" TEXT DEFAULT NULL,
+    "deletedAt" BIGINT DEFAULT NULL,
+    PRIMARY KEY (id)
+);
