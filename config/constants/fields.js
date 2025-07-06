@@ -9,7 +9,6 @@ const FIELDS = {
     ...ATTRIBUTES,
     "authToken",
     "password",
-    "twoFASecret",
     "forgotPwdToken",
     "forgotPwdTokenExpiry",
   ],

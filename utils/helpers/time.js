@@ -194,6 +194,8 @@ const normalizeDateRange = (start, end) => {
   };
 };
 
+const MINUTE = 60000;
+
 module.exports = {
   getTimestamp,
   getTimestampFromDate,
@@ -207,4 +209,5 @@ module.exports = {
   getDateRange,
   normalizeDateRange,
   getCurrentISODateForTimeZone,
+  MINUTE,
 };

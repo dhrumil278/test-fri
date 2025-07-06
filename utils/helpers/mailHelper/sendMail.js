@@ -29,7 +29,7 @@ const sendMail = async (mailObject) => {
       },
     };
     from = {
-      name: "Medical Insurance",
+      name: "Wealth Train",
       address: process.env.GMAIL,
     };
 

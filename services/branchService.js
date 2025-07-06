@@ -1,10 +1,12 @@
+// Service functions for branch user management and authentication
 const { FIELDS } = require("../config/constants/fields");
 const { SPEAKEASY, OPERATOR } = require("../config/constants/packages");
-const Admin = require("../models/admin");
+const User = require("../models/user");
 const { getTimestamp } = require("../utils/helpers/time");
 
-const findAdminByEmail = (email) =>
-  Admin.findOne({
+// Find an active, non-deleted branch by email
+const findBranchByEmail = (email) =>
+  User.findOne({
     where: {
       email,
       isActive: true,
@@ -12,50 +14,36 @@ const findAdminByEmail = (email) =>
     },
   });
 
-const updateAdminAuthToken = (authToken, id) =>
-  Admin.update(
+// Update the auth token for a branch by ID
+const updateBranchAuthToken = (authToken, id) =>
+  User.update(
     { authToken },
     {
       where: { id },
     }
   );
 
-const findAdminById = (id) =>
-  Admin.findByPk(id, {
+// Find a branch by primary key, excluding sensitive attributes
+const findBranchById = (id) =>
+  User.findByPk(id, {
     attributes: {
       exclude: FIELDS.REMOVED_SENSITIVE_ATTRIBUTES,
     },
   });
 
-const createAdmin = (adminData) =>
-  Admin.create({
-    ...adminData,
-    isTwoFAEnabled: false,
-    sessionTwoFA: false,
+// Create a new branch user
+const createBranch = (branchData) =>
+  User.create({
+    ...branchData,
     createdAt: getTimestamp(),
     updatedAt: getTimestamp(),
   });
 
-// Update the password for an admin user
-const updateAdminPassword = (userId, newPassword, token) =>
-  Admin.update(
-    {
-      password: newPassword,
-      updatedAt: getTimestamp(),
-      updatedBy: userId,
-      authToken: token,
-      forgotPwdToken: null,
-      forgotPwdTokenExpiry: null,
-    },
-    {
-      where: { id: userId },
-    }
-  );
+// Find a branch by ID, including sensitive details
+const findBranchByIdWithSensitiveDetails = (id) => User.findByPk(id);
 
-const findAdminByIdWithSensitiveDetails = (id) => Admin.findByPk(id);
-
-// Find all admins with optional filters, search, and pagination
-const findAllAdmins = ({
+// Find all branches with optional filters, search, and pagination
+const findAllBranches = ({
   skip,
   limit,
   search,
@@ -70,6 +58,7 @@ const findAllAdmins = ({
     ...(role !== undefined && role !== null && { role }),
   };
 
+  // Add search filter if provided
   if (search) {
     const searchMatchString = `%${search}%`;
     const searchObject = { [OPERATOR.iLike]: searchMatchString };
@@ -87,12 +76,13 @@ const findAllAdmins = ({
     };
   }
 
+  // Pagination options
   const skipLimitObject = {
     ...(skip !== undefined && skip !== null && { offset: skip }),
     ...(limit !== undefined && limit !== null && { limit }),
   };
 
-  return Admin.findAndCountAll({
+  return User.findAndCountAll({
     where: whereObject,
     ...skipLimitObject,
     order: [
@@ -105,8 +95,9 @@ const findAllAdmins = ({
   });
 };
 
-const updateAdmin = (override = {}, id, adminId) =>
-  Admin.update(
+// Update branch details by ID
+const updateBranch = (override = {}, id, adminId) =>
+  User.update(
     {
       updatedAt: getTimestamp(),
       updatedBy: adminId,
@@ -119,8 +110,9 @@ const updateAdmin = (override = {}, id, adminId) =>
     }
   );
 
-const removeAdmin = (id, adminId, t) =>
-  Admin.update(
+// Soft-delete a branch by marking as deleted and inactive
+const removeBranch = (id, adminId, t) =>
+  User.update(
     {
       deletedAt: getTimestamp(),
       deletedBy: adminId,
@@ -135,46 +127,25 @@ const removeAdmin = (id, adminId, t) =>
     }
   );
 
-const updateTwoFASecretAdmin = (twoFASecret, id) =>
-  Admin.update(
+// Update the password for a branch user
+const updateBranchPassword = (userId, newPassword, token) =>
+  User.update(
     {
+      password: newPassword,
       updatedAt: getTimestamp(),
-      updatedBy: id,
-      twoFASecret,
+      updatedBy: userId,
+      authToken: token,
+      forgotPwdToken: null,
+      forgotPwdTokenExpiry: null,
     },
     {
-      where: {
-        id,
-      },
+      where: { id: userId },
     }
   );
 
-const verifyOTP = (otp, secret) => {
-  return SPEAKEASY.totp.verify({
-    secret: secret,
-    encoding: FIELDS.BASE32,
-    token: otp,
-    window: 2,
-  });
-};
-
-const updateSession2FA = (id, status, isTwoFAEnabled) =>
-  Admin.update(
-    {
-      updatedAt: getTimestamp(),
-      updatedBy: id,
-      sessionTwoFA: status,
-      isTwoFAEnabled: isTwoFAEnabled,
-    },
-    {
-      where: {
-        id,
-      },
-    }
-  );
-
+// Update forgot password token and expiry for a branch
 const updateForgotPwdTokenAndExpiry = (email, id, token, forgotPwdExp) =>
-  Admin.update(
+  User.update(
     {
       updatedAt: getTimestamp(),
       updatedBy: id,
@@ -190,17 +161,14 @@ const updateForgotPwdTokenAndExpiry = (email, id, token, forgotPwdExp) =>
   );
 
 module.exports = {
-  findAdminByEmail,
-  updateAdminAuthToken,
-  findAdminById,
-  createAdmin,
-  updateAdminPassword,
-  findAdminByIdWithSensitiveDetails,
-  findAllAdmins,
-  removeAdmin,
-  updateAdmin,
-  updateTwoFASecretAdmin,
-  verifyOTP,
-  updateSession2FA,
+  findBranchByEmail,
+  updateBranchAuthToken,
+  findBranchById,
+  createBranch,
+  findBranchByIdWithSensitiveDetails,
+  findAllBranches,
+  removeBranch,
+  updateBranch,
+  updateBranchPassword,
   updateForgotPwdTokenAndExpiry,
 };

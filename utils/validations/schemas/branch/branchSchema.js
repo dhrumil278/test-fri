@@ -1,4 +1,4 @@
-const { ADMIN_ROLE } = require("../../../../config/constants/constantValues");
+const { USER_ROLE } = require("../../../../config/constants/constantValues");
 const { Joi } = require("../../common/joi");
 const {
   booleanSchema,
@@ -11,31 +11,28 @@ const {
   skipLimitSearchSchemaObj,
 } = require("../common/skipLimitSearchSchema");
 
-const adminCreateSchema = Joi.object({
+const branchCreateSchema = Joi.object({
   firstName: capRequiredStringSchema,
   lastName: capRequiredStringSchema,
   email: emailSchema.required(),
   password: passwordSchema.required(),
   role: capRequiredStringSchema
-    .valid(ADMIN_ROLE.COUNSELOR, ADMIN_ROLE.ADMIN, ADMIN_ROLE.FINANCIER)
+    .valid(USER_ROLE.BRANCH, USER_ROLE.DISTRIBUTOR, USER_ROLE.FRANCHISE)
     .required(),
 });
 
-const adminUpdateSchema = Joi.object({
+const branchUpdateSchema = Joi.object({
   firstName: capRequiredStringSchema,
   lastName: capRequiredStringSchema,
   email: emailSchema.required(),
   isActive: booleanSchema.optional().default(true),
-  role: capRequiredStringSchema
-    .valid(ADMIN_ROLE.COUNSELOR, ADMIN_ROLE.ADMIN, ADMIN_ROLE.FINANCIER)
-    .required(),
 });
 
-const adminListSchema = Joi.object({
+const branchListSchema = Joi.object({
   ...skipLimitSearchSchemaObj,
   role: capRequiredStringSchema
-    .valid(ADMIN_ROLE.COUNSELOR, ADMIN_ROLE.ADMIN, ADMIN_ROLE.FINANCIER)
+    .valid(USER_ROLE.BRANCH, USER_ROLE.DISTRIBUTOR, USER_ROLE.FRANCHISE)
     .optional(),
 });
 
-module.exports = { adminCreateSchema, adminUpdateSchema, adminListSchema };
+module.exports = { branchCreateSchema, branchUpdateSchema, branchListSchema };

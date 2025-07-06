@@ -1,8 +1,10 @@
 // Sequelize model definition for the Admin user
-const { ADMIN_ROLE } = require("../config/constants/constantValues");
+const { ADMIN_ROLE, USER_ROLE } = require("../config/constants/constantValues");
 const { DATABASE, DATABASE_DATATYPES } = require("../config/database");
-const Admin = DATABASE.define(
-  "Admin",
+
+// Define the Admin model schema
+const User = DATABASE.define(
+  "User",
   {
     id: {
       type: DATABASE_DATATYPES.UUID,
@@ -32,7 +34,7 @@ const Admin = DATABASE.define(
     },
     role: {
       type: DATABASE_DATATYPES.STRING,
-      defaultValue: ADMIN_ROLE.ADMIN, // Default role is admin
+      defaultValue: USER_ROLE.BRANCH, // Default role is admin
     },
     forgotPwdToken: {
       type: DATABASE_DATATYPES.UUID,
@@ -41,6 +43,22 @@ const Admin = DATABASE.define(
     forgotPwdTokenExpiry: {
       type: DATABASE_DATATYPES.BIGINT,
       allowNull: true,
+    },
+    invitedBy: {
+      type: DATABASE_DATATYPES.UUID,
+      allowNull: true,
+      references: {
+        model: "admin",
+        key: "id",
+      },
+    },
+    parentId: {
+      type: DATABASE_DATATYPES.UUID,
+      allowNull: true,
+      references: {
+        model: "user",
+        key: "id",
+      },
     },
     isActive: {
       type: DATABASE_DATATYPES.BOOLEAN,
@@ -76,18 +94,36 @@ const Admin = DATABASE.define(
     },
   },
   {
-    timestamps: false,
-    tableName: "admin",
+    timestamps: false, // Disable automatic timestamps
+    tableName: "user", // Explicit table name
   }
 );
 
 // Define model associations
-Admin.associate = (models) => {
-  // Admin has many Users (who they invited)
-  Admin.hasMany(models.User, {
+User.associate = (models) => {
+  // User belongs to Admin (who invited them)
+  User.belongsTo(models.Admin, {
     foreignKey: "invitedBy",
-    as: "invitedUsers",
+    as: "invitedByAdmin",
+  });
+
+  // User belongs to another User (parent-child relationship)
+  User.belongsTo(models.User, {
+    foreignKey: "parentId",
+    as: "parent",
+  });
+
+  // User has many child Users
+  User.hasMany(models.User, {
+    foreignKey: "parentId",
+    as: "children",
+  });
+
+  // User has many ReferralLinks
+  User.hasMany(models.ReferralLink, {
+    foreignKey: "userId",
+    as: "referralLinks",
   });
 };
 
-module.exports = Admin;
+module.exports = User;

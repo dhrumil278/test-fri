@@ -1,5 +1,9 @@
 const { FIELDS } = require("../../../../config/constants/fields");
-const { stringSanitizer } = require("../../../sanitizers/stringSanitizers");
+const {
+  stringSanitizer,
+  stringSanitizerToUpper,
+  stringSanitizerToLower,
+} = require("../../../sanitizers/stringSanitizers");
 const { Joi } = require("../../common/joi");
 const { uuidSchema } = require("./uuidSchema");
 
@@ -13,7 +17,7 @@ const emailSchema = stringSchema
   .email({
     minDomainSegments: 2,
   })
-  .custom(stringSanitizer);
+  .custom(stringSanitizerToLower);
 
 const optionalEmailSchema = emailSchema
   .empty(FIELDS.JOI_EMPTY_ARRAY)
@@ -46,7 +50,9 @@ const phoneFaxSchema = stringSchema
   .optional()
   .default(null);
 
-const capRequiredStringSchema = stringSchema.custom(stringSanitizer).required();
+const capRequiredStringSchema = stringSchema
+  .custom(stringSanitizerToUpper)
+  .required();
 
 const capOptionalStringSchema = ({
   defaultValue = null,

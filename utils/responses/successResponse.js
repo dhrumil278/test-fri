@@ -19,7 +19,7 @@ const generateSuccessResponse =
 
     return {
       status: statusCode,
-      data: cipherText,
+      data: data,
       message: getMessages(messageKey, lang) || EMPTY_STRING,
       errorData: {},
       isError: false,

@@ -1,4 +1,6 @@
-const stringSanitizer = (value) => value.trim().toUpperCase();
+const stringSanitizerToUpper = (value) => value.trim().toUpperCase();
+const stringSanitizer = (value) => value.trim();
+const stringSanitizerToLower = (value) => value.trim().toLowerCase();
 
 const trimStringSanitizer = (value) => value.trim();
 
@@ -8,4 +10,6 @@ module.exports = {
   stringSanitizer,
   trimStringSanitizer,
   stringToIntegerSanitizer,
+  stringSanitizerToLower,
+  stringSanitizerToUpper,
 };

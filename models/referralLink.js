@@ -1,8 +1,10 @@
 // Sequelize model definition for the Admin user
-const { ADMIN_ROLE } = require("../config/constants/constantValues");
+const { ADMIN_ROLE, USER_ROLE } = require("../config/constants/constantValues");
 const { DATABASE, DATABASE_DATATYPES } = require("../config/database");
-const Admin = DATABASE.define(
-  "Admin",
+
+// Define the ReferralLink model schema
+const ReferralLink = DATABASE.define(
+  "ReferralLink",
   {
     id: {
       type: DATABASE_DATATYPES.UUID,
@@ -10,37 +12,22 @@ const Admin = DATABASE.define(
       allowNull: false,
       unique: true,
     },
-    firstName: {
+    name: {
       type: DATABASE_DATATYPES.STRING,
       allowNull: true,
     },
-    lastName: {
-      type: DATABASE_DATATYPES.STRING,
-      allowNull: true,
-    },
-    email: {
-      type: DATABASE_DATATYPES.STRING,
-      allowNull: false,
-    },
-    password: {
-      type: DATABASE_DATATYPES.STRING,
-      allowNull: false,
-    },
-    authToken: {
-      type: DATABASE_DATATYPES.STRING,
-      allowNull: true,
-    },
-    role: {
-      type: DATABASE_DATATYPES.STRING,
-      defaultValue: ADMIN_ROLE.ADMIN, // Default role is admin
-    },
-    forgotPwdToken: {
+    userId: {
       type: DATABASE_DATATYPES.UUID,
-      allowNull: true,
+      allowNull: false,
+      references: {
+        model: "user", // Reference to the User model
+        key: "id",
+      },
     },
-    forgotPwdTokenExpiry: {
-      type: DATABASE_DATATYPES.BIGINT,
-      allowNull: true,
+    haxCode: {
+      type: DATABASE_DATATYPES.STRING,
+      allowNull: false,
+      unique: true, // Ensure haxCode is unique
     },
     isActive: {
       type: DATABASE_DATATYPES.BOOLEAN,
@@ -76,18 +63,17 @@ const Admin = DATABASE.define(
     },
   },
   {
-    timestamps: false,
-    tableName: "admin",
+    timestamps: false, // Disable automatic timestamps
+    tableName: "referral_link", // Fixed table name
   }
 );
 
 // Define model associations
-Admin.associate = (models) => {
-  // Admin has many Users (who they invited)
-  Admin.hasMany(models.User, {
-    foreignKey: "invitedBy",
-    as: "invitedUsers",
+ReferralLink.associate = (models) => {
+  ReferralLink.belongsTo(models.User, {
+    foreignKey: "userId",
+    as: "user",
   });
 };
 
-module.exports = Admin;
+module.exports = ReferralLink;
